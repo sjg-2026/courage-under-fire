@@ -7,6 +7,8 @@ This project is a **single, self-contained HTML file** (`index.html`). There is 
 ```
 .
 ├── index.html        # The entire application (markup + CSS + JS)
+├── assets/
+│   └── seth.png      # Floating avatar image ("Dr. G")
 ├── README.md         # Overview, features, how to view
 ├── ARCHITECTURE.md   # This file
 ├── BACKGROUND.md     # Historical/philosophical context and source notes
@@ -24,6 +26,7 @@ This project is a **single, self-contained HTML file** (`index.html`). There is 
 <body>
   ├── #progress-bar           → reading-progress indicator (fixed, top)
   ├── #nav                    → sticky header: brand, smooth-scroll links, theme toggle
+  ├── .avatar-float           → floating circular avatar "Dr. G" (fixed, fades on scroll)
   ├── #to-top                 → back-to-top button (fixed, bottom-right)
   ├── header.hero             → title, byline, source link, thesis
   ├── div.wrap                → nine <section> blocks (see README table)
@@ -57,8 +60,8 @@ A pre-paint script in `<head>` adds a `.js` class so reveal animations only hide
 
 All implemented in a single IIFE at the end of `<body>`, and all gated behind `prefers-reduced-motion: reduce`:
 
-- **Reading progress + nav visibility + back-to-top** — one `scroll` listener, throttled with `requestAnimationFrame`. The nav slides in past ~420px; the back-to-top button appears past ~600px.
-- **Smooth scroll** — nav links and the back-to-top button use `scrollIntoView` / `scrollTo` with `behavior:'smooth'` (or `'auto'` under reduced motion).
+- **Reading progress + nav visibility + back-to-top + avatar** — one `scroll` listener, throttled with `requestAnimationFrame`. The nav slides in past ~420px; the back-to-top button appears past ~600px; the floating avatar fades out past ~300px.
+- **Smooth scroll** — nav links, the back-to-top button, and in-page jump links (`a.jump`, e.g. the callout's link to the reflection) use `scrollIntoView` / `scrollTo` with `behavior:'smooth'` (or `'auto'` under reduced motion).
 - **Scrollspy** — an `IntersectionObserver` with a centered `rootMargin` toggles the `.active` class on the nav link for the section in view.
 - **Reveal animations** — logical blocks are auto-tagged with `.reveal` in JS (keeping the markup clean), then revealed once via a second `IntersectionObserver`.
 - **Animated counters** — the four stat numbers count up with an ease-out cubic curve when scrolled into view, then settle on their exact display text (which includes glyphs like `½`, `+`, `×` via `data-display`).

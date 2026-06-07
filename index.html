@@ -47,6 +47,38 @@
   }
   .toggle:hover { transform:scale(1.08); }
 
+  /* Floating circular avatar */
+  .avatar-float {
+    position:fixed; top:78px; right:28px; z-index:115;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    animation:avatar-bob 4.5s ease-in-out infinite;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .avatar-float.hidden { opacity:0; transform:translateY(-12px); pointer-events:none; animation:none; }
+  .avatar-float .avatar-img {
+    width:96px; height:96px; border-radius:50%;
+    overflow:hidden; border:3px solid var(--accent);
+    background:var(--bg-tertiary);
+    box-shadow:0 8px 28px rgba(0,0,0,.22);
+  }
+  .avatar-float img {
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .avatar-float .avatar-name {
+    font-size:13px; font-weight:600; color:var(--text-primary);
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    padding:2px 10px; border-radius:999px; box-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  @keyframes avatar-bob {
+    0%,100% { transform:translateY(0); }
+    50%     { transform:translateY(-12px); }
+  }
+  @media (max-width:760px) {
+    .avatar-float { top:66px; right:14px; }
+    .avatar-float .avatar-img { width:64px; height:64px; }
+    .avatar-float .avatar-name { font-size:11px; }
+  }
+
   /* Hero */
   header.hero {
     text-align:center; padding:88px 24px 56px;
@@ -94,6 +126,29 @@
   .gloss {
     border-bottom:1px dotted var(--accent); cursor:help; text-decoration:none;
   }
+
+  /* "What makes this different" callout */
+  .distinct {
+    position:relative; background:var(--bg-primary);
+    border:1px solid var(--border-secondary); border-left:5px solid var(--accent);
+    border-radius:14px; padding:26px 30px; margin:24px 0 8px;
+    box-shadow:0 4px 20px rgba(0,0,0,.06);
+  }
+  .distinct .badge {
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--accent-soft); color:var(--accent);
+    font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
+  }
+  .distinct h3 { font-size:24px; font-weight:600; letter-spacing:-.01em; margin-bottom:10px; }
+  .distinct p { font-size:17px; line-height:1.55; color:var(--text-secondary); }
+  .distinct p strong { color:var(--text-primary); }
+  .distinct .jump {
+    display:inline-block; margin-top:16px; font-size:15px; font-weight:600;
+    color:var(--text-interactive); text-decoration:none;
+    border-bottom:1px dotted var(--text-interactive); padding-bottom:1px;
+  }
+  .distinct .jump:hover { border-bottom-style:solid; }
 
   /* Collapsible section */
   details.collapsible { border:none; }
@@ -370,6 +425,11 @@
   </div>
 </nav>
 
+<div class="avatar-float" aria-label="Dr. G">
+  <div class="avatar-img"><img src="assets/seth.png" alt="Dr. G" loading="lazy"></div>
+  <span class="avatar-name">Dr. G</span>
+</div>
+
 <button id="to-top" aria-label="Back to top">↑</button>
 
 <header class="hero">
@@ -389,6 +449,13 @@
       <div class="oi-label">If you read nothing else</div>
       <p>Focus your energy only on what's genuinely within your control — your judgments, your effort, your integrity, how you respond — and treat everything external as not worth your anxiety.</p>
       <p>That single principle, drawn from the ancient philosophy of Stoicism, is what Vice Admiral James Stockdale credited with carrying him through more than seven years as a prisoner of war. The rest of this page traces how he learned it, how he applied it, and what it can mean for the way teams work together under pressure.</p>
+    </div>
+
+    <div class="distinct">
+      <span class="badge">✦ What Makes This Different</span>
+      <h3>Ancient philosophy, read through a modern management lens</h3>
+      <p>Most treatments of Stockdale's speech stay in the worlds of history, the military, or classical philosophy. <strong>This analysis is built for today's workplace.</strong> It translates his hard-won survival framework — BACK US — directly into the language of <strong>modern management practice</strong>: leadership and reputation, competitive strategy, decision-making under pressure, team incentives, and the deliberate engineering of organizational culture. The result isn't a war story with a moral tacked on; it's a practical model for how teams hold their character when the pressure is sustained.</p>
+      <a class="jump" href="#reflection">Jump to the full breakdown → BACK US in the Modern Organization</a>
     </div>
   </section>
 
@@ -739,6 +806,7 @@ flowchart TB
     var nav = document.getElementById('nav');
     var bar = document.getElementById('progress-bar');
     var toTop = document.getElementById('to-top');
+    var avatar = document.querySelector('.avatar-float');
     var links = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
     var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
 
@@ -753,14 +821,16 @@ flowchart TB
         bar.style.width = (h > 0 ? (st / h) * 100 : 0) + '%';
         if (st > 420) { nav.classList.add('visible'); } else { nav.classList.remove('visible'); }
         if (st > 600) { toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+        if (avatar) { if (st > 300) { avatar.classList.add('hidden'); } else { avatar.classList.remove('hidden'); } }
         ticking = false;
       });
     }
     window.addEventListener('scroll', onScroll, { passive:true });
     onScroll();
 
-    // Smooth-scroll for nav links (respects reduced motion)
-    links.forEach(function(a){
+    // Smooth-scroll for nav links and in-page anchor links (respects reduced motion)
+    var smoothLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a, a.jump'));
+    smoothLinks.forEach(function(a){
       a.addEventListener('click', function(e){
         var target = document.getElementById(a.getAttribute('href').slice(1));
         if (!target) return;
@@ -791,6 +861,7 @@ flowchart TB
     // Auto-tag logical blocks so markup stays clean.
     var revealSelectors = [
       'section > .kicker', 'section > h2', 'section > .lede',
+      '.one-idea', '.distinct',
       '.stat', '.tl-item', '.dcol', '.card', '.cmd', '.principle .p',
       '.flip', '.us-note', '.diagram-wrap', '.reflect-intro',
       '.reflect h3', '.reflect > p', '.person', 'blockquote',

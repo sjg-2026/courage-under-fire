@@ -39,8 +39,10 @@ python3 -m http.server 8182
 
 - **Apple Bridge design system** — semantic CSS variables, SF Pro type stack, 4/8px spacing grid
 - **Light & dark mode** — respects OS preference, with a manual toggle persisted to `localStorage`
+- **"What Makes This Different" callout** near the top, with an in-page jump link to the modern-management reflection
 - **Sticky navigation** with smooth-scroll, scrollspy active-link highlighting, and a reading-progress bar
 - **Scroll-triggered reveal animations** and **animated stat counters** (both gated behind `prefers-reduced-motion`)
+- **Floating circular avatar** ("Dr. G") that bobs gently and fades out on scroll
 - **CSS-only flip cards** mapping each BACK US command to a modern business application
 - **Mermaid flowchart** bridging the prison framework to the organizational reflection
 - **Back-to-top button** and subtle card hover lift

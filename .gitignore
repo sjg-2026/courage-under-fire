@@ -1,0 +1,20 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+
+# Logs
+*.log
+
+# Node (not used today, but guards against accidental tooling additions)
+node_modules/
+dist/
+build/
+
+# Local environment
+.env
+.env.local

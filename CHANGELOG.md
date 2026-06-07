@@ -5,6 +5,12 @@ Versions are git-tagged — run `git tag -l 'v*'` to list all versions.
 
 ---
 
+## v3 — 2026-06-07 18:01
+**Author:** Seth Gillespie  
+**Change:** initial commit
+
+---
+
 ## v2 — 2026-06-07 17:59
 **Author:** Seth Gillespie  
 **Change:** v3: v2: docs: simplify README...

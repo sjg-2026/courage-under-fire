@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Courage Under Fire — Leadership Edition</title>
+<script>document.documentElement.classList.add('js');</script>
+<style>
+  :root {
+    --text-primary:#1D1D1F; --text-secondary:#6E6E73; --text-interactive:#0066CC;
+    --text-error:#E30000; --bg-primary:#FFFFFF; --bg-secondary:#FBFBFD;
+    --bg-tertiary:#F5F5F7; --border-secondary:#D2D2D7;
+    --accent:#9A6A1F; --accent-soft:#F3EBDB;
+  }
+  [data-theme="dark"] {
+    --text-primary:#F5F5F7; --text-secondary:#86868B; --text-interactive:#2997FF;
+    --text-error:#FF3037; --bg-primary:#000000; --bg-secondary:#161617;
+    --bg-tertiary:#1D1D1F; --border-secondary:#424245;
+    --accent:#D8A94B; --accent-soft:#2A2114;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --text-primary:#F5F5F7; --text-secondary:#86868B; --text-interactive:#2997FF;
+      --text-error:#FF3037; --bg-primary:#000000; --bg-secondary:#161617;
+      --bg-tertiary:#1D1D1F; --border-secondary:#424245;
+      --accent:#D8A94B; --accent-soft:#2A2114;
+    }
+  }
+  * { box-sizing:border-box; margin:0; padding:0; }
+  html { scroll-behavior:smooth; }
+  body {
+    font-family:system-ui,sans-serif;
+    background:var(--bg-secondary); color:var(--text-primary);
+    font-size:17px; line-height:1.5; -webkit-font-smoothing:antialiased;
+    transition:background .3s,color .3s;
+  }
+  .wrap { max-width:1080px; margin:0 auto; padding:0 24px; }
+
+  /* Theme toggle */
+  .toggle {
+    position:fixed; top:20px; right:20px; z-index:50;
+    width:44px; height:44px; border-radius:50%;
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    color:var(--text-primary); cursor:pointer; font-size:18px;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 1px 6px rgba(0,0,0,.08); transition:transform .2s;
+  }
+  .toggle:hover { transform:scale(1.08); }
+
+  /* Floating circular avatar */
+  .avatar-float {
+    position:fixed; top:78px; right:28px; z-index:115;
+    display:flex; flex-direction:column; align-items:center; gap:6px;
+    animation:avatar-bob 4.5s ease-in-out infinite;
+    transition:opacity .4s ease, transform .4s ease;
+  }
+  .avatar-float.hidden { opacity:0; transform:translateY(-12px); pointer-events:none; animation:none; }
+  .avatar-float .avatar-img {
+    width:96px; height:96px; border-radius:50%;
+    overflow:hidden; border:3px solid var(--accent);
+    background:var(--bg-tertiary);
+    box-shadow:0 8px 28px rgba(0,0,0,.22);
+  }
+  .avatar-float img {
+    width:100%; height:100%; object-fit:cover; display:block;
+  }
+  .avatar-float .avatar-name {
+    font-size:13px; font-weight:600; color:var(--text-primary);
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    padding:2px 10px; border-radius:999px; box-shadow:0 2px 8px rgba(0,0,0,.12);
+  }
+  @keyframes avatar-bob {
+    0%,100% { transform:translateY(0); }
+    50%     { transform:translateY(-12px); }
+  }
+  @media (max-width:760px) {
+    .avatar-float { top:66px; right:14px; }
+    .avatar-float .avatar-img { width:64px; height:64px; }
+    .avatar-float .avatar-name { font-size:11px; }
+  }
+
+  /* Hero */
+  header.hero {
+    text-align:center; padding:88px 24px 56px;
+    background:linear-gradient(180deg,var(--bg-tertiary),var(--bg-secondary));
+    border-bottom:1px solid var(--border-secondary);
+  }
+  .eyebrow {
+    font-size:13px; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:18px;
+  }
+  header.hero h1 { font-size:52px; font-weight:600; letter-spacing:-.02em; line-height:1.05; }
+  header.hero .sub { font-size:21px; font-weight:400; color:var(--text-secondary); margin-top:14px; }
+  header.hero .meta { font-size:15px; color:var(--text-secondary); margin-top:24px; }
+  header.hero .meta a { color:var(--text-interactive); text-decoration:none; font-weight:500; }
+  header.hero .meta a:hover { text-decoration:underline; }
+  header.hero .meta:nth-of-type(2) { margin-top:10px; }
+  .thesis {
+    max-width:680px; margin:36px auto 0; font-size:20px; line-height:1.55;
+    color:var(--text-primary);
+  }
+  .thesis em { color:var(--accent); font-style:italic; }
+
+  /* Sections */
+  section { padding:56px 0; border-bottom:1px solid var(--border-secondary); scroll-margin-top:70px; }
+  .kicker {
+    font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:8px;
+  }
+  h2 { font-size:32px; font-weight:600; letter-spacing:-.01em; margin-bottom:6px; }
+  .lede { font-size:18px; color:var(--text-secondary); margin-bottom:32px; }
+
+  /* Plain-language summary box */
+  .one-idea {
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:18px;
+    padding:28px 32px; margin:0 0 8px;
+  }
+  .one-idea .oi-label {
+    font-size:13px; font-weight:600; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--accent); margin-bottom:10px;
+  }
+  .one-idea p { font-size:19px; line-height:1.55; color:var(--text-primary); }
+  .one-idea p + p { margin-top:12px; font-size:16px; color:var(--text-secondary); }
+
+  /* Inline jargon gloss (dotted underline + hover tooltip) */
+  .gloss {
+    border-bottom:1px dotted var(--accent); cursor:help; text-decoration:none;
+  }
+
+  /* "What makes this different" callout */
+  .distinct {
+    position:relative; background:var(--bg-primary);
+    border:1px solid var(--border-secondary); border-left:5px solid var(--accent);
+    border-radius:14px; padding:26px 30px; margin:24px 0 8px;
+    box-shadow:0 4px 20px rgba(0,0,0,.06);
+  }
+  .distinct .badge {
+    display:inline-flex; align-items:center; gap:7px;
+    background:var(--accent-soft); color:var(--accent);
+    font-size:12px; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+    padding:5px 12px; border-radius:999px; margin-bottom:14px;
+  }
+  .distinct h3 { font-size:24px; font-weight:600; letter-spacing:-.01em; margin-bottom:10px; }
+  .distinct p { font-size:17px; line-height:1.55; color:var(--text-secondary); }
+  .distinct p strong { color:var(--text-primary); }
+  .distinct .jump {
+    display:inline-block; margin-top:16px; font-size:15px; font-weight:600;
+    color:var(--text-interactive); text-decoration:none;
+    border-bottom:1px dotted var(--text-interactive); padding-bottom:1px;
+  }
+  .distinct .jump:hover { border-bottom-style:solid; }
+
+  /* Collapsible section */
+  details.collapsible { border:none; }
+  details.collapsible > summary {
+    list-style:none; cursor:pointer; display:flex; align-items:baseline; gap:12px;
+    padding:6px 0;
+  }
+  details.collapsible > summary::-webkit-details-marker { display:none; }
+  details.collapsible > summary .chev {
+    font-size:20px; color:var(--accent); transition:transform .25s; flex:0 0 auto;
+    transform:rotate(-90deg); line-height:1;
+  }
+  details.collapsible[open] > summary .chev { transform:rotate(0deg); }
+  details.collapsible > summary .sum-text { flex:1; }
+  details.collapsible > summary h2 { margin-bottom:0; }
+  details.collapsible > summary .hint { font-size:14px; color:var(--text-secondary); font-weight:400; }
+  details.collapsible[open] > summary .hint .show-when-open { display:inline; }
+  details.collapsible[open] > summary .hint .show-when-closed { display:none; }
+  details.collapsible > summary .hint .show-when-open { display:none; }
+  details.collapsible > summary .hint .show-when-closed { display:inline; }
+  details.collapsible .collapse-body { padding-top:24px; }
+
+  /* Stat cards */
+  .stats { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; }
+  .stat {
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    border-radius:16px; padding:24px 20px; text-align:center;
+  }
+  .stat .num { font-size:40px; font-weight:600; color:var(--accent); letter-spacing:-.02em; }
+  .stat .lbl { font-size:14px; color:var(--text-secondary); margin-top:6px; line-height:1.35; }
+
+  /* Timeline */
+  .timeline { position:relative; margin-top:8px; padding-left:34px; }
+  .timeline::before {
+    content:""; position:absolute; left:9px; top:6px; bottom:6px;
+    width:2px; background:var(--border-secondary);
+  }
+  .tl-item { position:relative; padding:0 0 28px; }
+  .tl-item:last-child { padding-bottom:0; }
+  .tl-item::before {
+    content:""; position:absolute; left:-30px; top:4px;
+    width:14px; height:14px; border-radius:50%;
+    background:var(--accent); border:3px solid var(--bg-secondary);
+  }
+  .tl-year { font-size:14px; font-weight:600; color:var(--accent); }
+  .tl-title { font-size:18px; font-weight:600; margin:2px 0 4px; }
+  .tl-desc { font-size:16px; color:var(--text-secondary); }
+
+  /* Dichotomy two-column */
+  .dichotomy { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+  .dcol {
+    border-radius:18px; padding:28px; border:1px solid var(--border-secondary);
+  }
+  .dcol.up { background:var(--accent-soft); border-color:var(--accent); }
+  .dcol.not { background:var(--bg-primary); }
+  .dcol h3 { font-size:20px; font-weight:600; margin-bottom:4px; }
+  .dcol .tag { font-size:14px; color:var(--text-secondary); margin-bottom:16px; }
+  .dcol ul { list-style:none; }
+  .dcol li {
+    font-size:16px; padding:8px 0 8px 26px; position:relative;
+    border-top:1px solid var(--border-secondary);
+  }
+  .dcol li:first-child { border-top:none; }
+  .dcol.up li::before { content:"✓"; position:absolute; left:0; color:var(--accent); font-weight:600; }
+  .dcol.not li::before { content:"✕"; position:absolute; left:0; color:var(--text-secondary); }
+
+  /* Theme cards */
+  .cards { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .card {
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    border-radius:16px; padding:24px;
+  }
+  .card h3 { font-size:18px; font-weight:600; margin-bottom:8px; }
+  .card p { font-size:16px; color:var(--text-secondary); }
+  .card .icon { font-size:24px; margin-bottom:10px; display:block; }
+
+  /* BACK US — flip cards */
+  .backus { display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:14px; }
+  .flip { background:transparent; perspective:1000px; height:180px; cursor:pointer; border:none; padding:0; font:inherit; text-align:inherit; }
+  .flip-inner { position:relative; width:100%; height:100%; transition:transform .55s cubic-bezier(.4,.2,.2,1); transform-style:preserve-3d; }
+  .flip[aria-pressed="true"] .flip-inner,
+  .flip:has(input:checked) .flip-inner { transform:rotateY(180deg); }
+  .flip-face {
+    position:absolute; inset:0; backface-visibility:hidden; -webkit-backface-visibility:hidden;
+    border-radius:14px; padding:18px 14px; display:flex; flex-direction:column;
+    align-items:center; justify-content:center; text-align:center;
+    border:1px solid var(--border-secondary); background:var(--bg-primary);
+  }
+  .flip-front .letter { font-size:34px; font-weight:700; color:var(--accent); }
+  .flip-front .word { font-size:15px; font-weight:600; margin-top:4px; }
+  .flip-front .word small { display:block; font-weight:400; color:var(--text-secondary); font-size:13px; margin-top:3px; }
+  .flip-front .flip-hint { position:absolute; bottom:9px; font-size:11px; color:var(--text-secondary); letter-spacing:.04em; }
+  .flip-back {
+    transform:rotateY(180deg); background:var(--accent-soft); border-color:var(--accent);
+  }
+  .flip-back .bk-domain { font-size:11px; font-weight:600; letter-spacing:.08em; text-transform:uppercase; color:var(--accent); margin-bottom:6px; }
+  .flip-back .bk-text { font-size:13.5px; line-height:1.4; color:var(--text-primary); }
+  .us-note {
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:14px;
+    padding:18px 22px; font-size:17px;
+  }
+  .us-note strong { color:var(--accent); }
+
+  /* Expanded command detail */
+  .subhead { font-size:23px; font-weight:600; margin:40px 0 8px; letter-spacing:-.01em; }
+  .subhead-lede { font-size:16px; color:var(--text-secondary); margin-bottom:18px; }
+  .cmd {
+    display:flex; gap:18px; align-items:flex-start; background:var(--bg-primary);
+    border:1px solid var(--border-secondary); border-radius:16px; padding:22px 24px; margin-bottom:14px;
+  }
+  .cmd-badge {
+    flex:0 0 auto; width:54px; height:54px; border-radius:13px;
+    background:var(--accent-soft); border:1px solid var(--accent); color:var(--accent);
+    font-size:30px; font-weight:700; display:flex; align-items:center; justify-content:center;
+  }
+  .cmd-body h4 { font-size:19px; font-weight:600; margin-bottom:8px; }
+  .cmd-body h4 span { color:var(--accent); }
+  .cmd-body p { font-size:16px; color:var(--text-secondary); margin-bottom:10px; }
+  .cmd-body p:last-child { margin-bottom:0; }
+  .cmd-body .ex {
+    font-size:15px; color:var(--text-primary); border-left:3px solid var(--accent);
+    padding-left:14px; font-style:italic;
+  }
+  .principle { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .principle .p {
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    border-radius:14px; padding:20px 22px;
+  }
+  .principle .p h4 { font-size:16px; font-weight:600; margin-bottom:6px; color:var(--accent); }
+  .principle .p p { font-size:15px; color:var(--text-secondary); }
+
+  /* Reflection */
+  .reflect-intro {
+    background:var(--accent-soft); border:1px solid var(--accent); border-radius:14px;
+    padding:20px 24px; font-size:16px; color:var(--text-primary); margin-bottom:8px;
+  }
+  .reflect h3 { font-size:22px; font-weight:600; margin:34px 0 4px; letter-spacing:-.01em; }
+  .reflect h3 .map { display:block; font-size:14px; font-weight:500; color:var(--accent); margin-top:3px; }
+  .reflect p { font-size:16px; color:var(--text-primary); margin:12px 0; }
+  .reflect p .lead-in { font-weight:600; }
+
+  /* Mermaid diagram */
+  .diagram-wrap {
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    border-radius:16px; padding:24px; margin:24px 0 8px;
+  }
+  .diagram-title { font-size:14px; font-weight:600; color:var(--accent); letter-spacing:.04em; text-transform:uppercase; margin-bottom:14px; text-align:center; }
+  .mermaid { text-align:center; width:100%; }
+  .mermaid svg { width:100%; max-width:100%; height:auto; }
+
+  /* People */
+  .people { display:grid; grid-template-columns:repeat(2,1fr); gap:16px; }
+  .person {
+    background:var(--bg-primary); border:1px solid var(--border-secondary);
+    border-radius:16px; padding:22px 24px;
+  }
+  .person .name { font-size:18px; font-weight:600; }
+  .person .role { font-size:14px; color:var(--accent); font-weight:500; margin-bottom:8px; }
+  .person p { font-size:15px; color:var(--text-secondary); }
+
+  /* Quotes */
+  .quotes { display:flex; flex-direction:column; gap:18px; }
+  blockquote {
+    background:var(--bg-primary); border-left:4px solid var(--accent);
+    border-radius:0 14px 14px 0; padding:22px 26px; font-size:19px; line-height:1.55;
+  }
+  blockquote cite { display:block; margin-top:10px; font-size:14px; font-style:normal; color:var(--text-secondary); }
+
+  /* Invictus */
+  .invictus {
+    text-align:center; background:linear-gradient(180deg,var(--bg-tertiary),var(--bg-secondary));
+  }
+  .invictus .poem {
+    font-size:26px; line-height:1.6; font-weight:500; max-width:560px; margin:24px auto 0;
+    letter-spacing:-.01em;
+  }
+  .invictus .poem-note { font-size:15px; color:var(--text-secondary); margin-top:22px; max-width:620px; margin-left:auto; margin-right:auto; }
+
+  footer { text-align:center; padding:40px 24px 56px; color:var(--text-secondary); font-size:14px; }
+  footer a { color:var(--text-interactive); text-decoration:none; }
+
+  /* ===== Dynamic UI ===== */
+  /* Reading-progress bar */
+  #progress-bar {
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:var(--accent); z-index:120; transition:width .1s linear;
+  }
+  /* Sticky header nav */
+  #nav {
+    position:fixed; top:0; left:0; right:0; z-index:110;
+    background:color-mix(in srgb, var(--bg-primary) 82%, transparent);
+    backdrop-filter:saturate(180%) blur(18px); -webkit-backdrop-filter:saturate(180%) blur(18px);
+    border-bottom:1px solid transparent; transition:border-color .3s, box-shadow .3s;
+    transform:translateY(-100%); /* hidden until past hero */
+    transition:transform .35s cubic-bezier(.4,.1,.2,1), border-color .3s;
+  }
+  #nav.visible { transform:translateY(0); border-bottom-color:var(--border-secondary); }
+  .nav-inner {
+    max-width:1080px; margin:0 auto; padding:0 20px; height:54px;
+    display:flex; align-items:center; gap:18px;
+  }
+  .nav-brand { font-size:15px; font-weight:600; white-space:nowrap; letter-spacing:-.01em; }
+  .nav-links {
+    display:flex; gap:4px; overflow-x:auto; flex:1; scrollbar-width:none;
+  }
+  .nav-links::-webkit-scrollbar { display:none; }
+  .nav-links a {
+    font-size:14px; color:var(--text-secondary); text-decoration:none; white-space:nowrap;
+    padding:6px 11px; border-radius:8px; transition:color .2s, background .2s; font-weight:500;
+  }
+  .nav-links a:hover { color:var(--text-primary); background:var(--bg-tertiary); }
+  .nav-links a.active { color:var(--accent); background:var(--accent-soft); }
+  .nav-toggle {
+    flex:0 0 auto; width:34px; height:34px; border-radius:50%; border:1px solid var(--border-secondary);
+    background:transparent; color:var(--text-primary); cursor:pointer; font-size:15px;
+  }
+
+  /* Scroll-reveal (only hidden when JS is active, to avoid flash for no-JS) */
+  .js .reveal { opacity:0; transform:translateY(24px); transition:opacity .6s ease, transform .6s ease; }
+  .js .reveal.in { opacity:1; transform:none; }
+
+  /* Hover lift on interactive cards */
+  .stat, .card, .person, .cmd, .principle .p {
+    transition:transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+  }
+  .stat:hover, .card:hover, .person:hover, .cmd:hover, .principle .p:hover {
+    transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.10); border-color:var(--accent);
+  }
+
+  /* Back-to-top */
+  #to-top {
+    position:fixed; bottom:24px; right:24px; z-index:90;
+    width:46px; height:46px; border-radius:50%; border:1px solid var(--border-secondary);
+    background:var(--bg-primary); color:var(--text-primary); cursor:pointer; font-size:20px;
+    box-shadow:0 2px 12px rgba(0,0,0,.12); opacity:0; pointer-events:none;
+    transform:translateY(10px); transition:opacity .3s, transform .3s;
+    display:flex; align-items:center; justify-content:center;
+  }
+  #to-top.show { opacity:1; pointer-events:auto; transform:translateY(0); }
+  #to-top:hover { transform:translateY(-2px) scale(1.06); }
+
+  @media (max-width:760px) {
+    header.hero h1 { font-size:38px; }
+    .stats { grid-template-columns:repeat(2,1fr); }
+    .dichotomy,.cards,.people { grid-template-columns:1fr; }
+    .backus { grid-template-columns:repeat(2,1fr); }
+    .nav-brand { display:none; }
+  }
+  @media (prefers-reduced-motion:reduce) {
+    * { transition:none !important; scroll-behavior:auto; animation:none !important; }
+    .reveal { opacity:1; transform:none; }
+  }
+</style>
+</head>
+<body>
+<div id="progress-bar"></div>
+
+<nav id="nav" aria-label="Section navigation">
+  <div class="nav-inner">
+    <span class="nav-brand">Courage Under Fire</span>
+    <div class="nav-links">
+      <a href="#summary">⭐ The One Idea</a>
+      <a href="#laboratory">🔬 The Laboratory</a>
+      <a href="#journey">✈️ The Journey</a>
+      <a href="#dichotomy">⚖️ Dichotomy</a>
+      <a href="#teaching">💡 Big Ideas</a>
+      <a href="#backus">🎖️ BACK US</a>
+      <a href="#reflection">🏢 Reflection</a>
+      <a href="#people">👥 People</a>
+      <a href="#quotes">💬 Quotes</a>
+      <a href="#invictus">⛓️ Invictus</a>
+    </div>
+    <button class="nav-toggle" id="themeToggle" aria-label="Toggle dark mode">◐</button>
+  </div>
+</nav>
+
+<div class="avatar-float" aria-label="Dr. G">
+  <div class="avatar-img"><img src="assets/seth.png" alt="Dr. G" loading="lazy"></div>
+  <span class="avatar-name">Dr. G</span>
+</div>
+
+<button id="to-top" aria-label="Back to top">↑</button>
+
+<header class="hero">
+  <div class="eyebrow">Leadership &amp; Resilience · A Visual Summary</div>
+  <h1>Courage Under Fire</h1>
+  <div class="sub">Testing Epictetus's Doctrines in a Laboratory of Human Behavior</div>
+  <div class="meta">Vice Admiral James Bond Stockdale&nbsp;·&nbsp;Speech at the Great Hall, King's College London&nbsp;·&nbsp;November 15, 1993</div>
+  <div class="meta"><a href="https://www.hoover.org/sites/default/files/uploads/documents/StockdaleCourage.pdf" target="_blank" rel="noopener">Read the original essay (PDF) ↗</a></div>
+  <p class="thesis">A naval aviator discovers Stoic philosophy at Stanford in 1962, is shot down behind enemy lines, and spends <em>seven and a half years</em> as a prisoner of war — using Epictetus's 2,000-year-old handbook as a survival manual. His verdict: the philosophy <em>"passed with flying colors."</em></p>
+</header>
+
+<div class="wrap">
+
+  <section id="summary">
+    <div class="kicker">The One Idea</div>
+    <div class="one-idea">
+      <div class="oi-label">If you read nothing else</div>
+      <p>Focus your energy only on what's genuinely within your control — your judgments, your effort, your integrity, how you respond — and treat everything external as not worth your anxiety.</p>
+      <p>That single principle, drawn from the ancient philosophy of Stoicism, is what Vice Admiral James Stockdale credited with carrying him through more than seven years as a prisoner of war. The rest of this page traces how he learned it, how he applied it, and what it can mean for the way teams work together under pressure.</p>
+    </div>
+
+    <div class="distinct">
+      <span class="badge">✦ What Makes This Different</span>
+      <h3>Ancient philosophy, read through a modern management lens</h3>
+      <p>Most treatments of Stockdale's speech stay in the worlds of history, the military, or classical philosophy. <strong>This analysis is built for today's workplace.</strong> It translates his hard-won survival framework — BACK US — directly into the language of <strong>modern management practice</strong>: leadership and reputation, competitive strategy, decision-making under pressure, team incentives, and the deliberate engineering of organizational culture. The result isn't a war story with a moral tacked on; it's a practical model for how teams hold their character when the pressure is sustained.</p>
+      <a class="jump" href="#reflection">Jump to the full breakdown → BACK US in the Modern Organization</a>
+    </div>
+  </section>
+
+  <section id="laboratory">
+    <div class="kicker">By the Numbers</div>
+    <h2>🔬 The Laboratory</h2>
+    <p class="lede">Stockdale called Epictetus's lecture room a hospital and his own prison a "laboratory of human behavior." These are its dimensions.</p>
+    <div class="stats">
+      <div class="stat"><div class="num" data-count="7.5" data-suffix="" data-display="7½">7½</div><div class="lbl">Years held as a prisoner of war</div></div>
+      <div class="stat"><div class="num" data-count="4" data-suffix="+" data-display="4+">4+</div><div class="lbl">Years in solitary confinement for Stockdale and three others</div></div>
+      <div class="stat"><div class="num" data-count="400" data-suffix="+" data-display="400+">400+</div><div class="lbl">Fellow officers in the prisoner community he led</div></div>
+      <div class="stat"><div class="num" data-count="1" data-suffix="" data-display="1">1</div><div class="lbl">Shared code of conduct that held the community together</div></div>
+    </div>
+  </section>
+
+  <section id="journey">
+    <div class="kicker">The Journey</div>
+    <h2>✈️ From Cockpit to Cell</h2>
+    <p class="lede">How a 38-year-old fighter pilot became a philosopher — and how philosophy became his armor.</p>
+    <div class="timeline">
+      <div class="tl-item">
+        <div class="tl-year">1962</div>
+        <div class="tl-title">A "feel-out pass" into Stanford's philosophy corner</div>
+        <div class="tl-desc">Bored by international relations, Stockdale meets Dean Philip Rhinelander, who tutors him privately and opens his eyes to the philosophic life.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1962</div>
+        <div class="tl-title">The gift of <em>The Enchiridion</em></div>
+        <div class="tl-desc">On their last session, Rhinelander hands him <span class="gloss" title="The Enchiridion (Greek for &quot;ready at hand&quot;) is a short handbook of Stoic advice compiled from the teachings of Epictetus, a Greek philosopher born a slave around AD 50.">Epictetus's handbook</span>: "Frederick the Great never went on a campaign without a copy in his kit."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1962–65</div>
+        <div class="tl-title">Three combat cruises, books on the bedside table</div>
+        <div class="tl-desc">Commanding a fighter squadron, then an air wing aboard USS Oriskany — yet hours each week buried in Epictetus, Homer, and Xenophon.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">Sept 9, 1965</div>
+        <div class="tl-title">Shot down behind enemy lines</div>
+        <div class="tl-desc">Ejecting from a burning A-4, he whispers: <em>"I'm leaving the world of technology and entering the world of Epictetus."</em> He lands with a broken leg and is captured.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1965–73</div>
+        <div class="tl-title">Senior officer of an "expatriate colony"</div>
+        <div class="tl-desc">As the only wing commander to survive ejection, he becomes clandestine commander of the POWs — building a society held together by a tap code and the order "BACK US."</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">Fall 1969</div>
+        <div class="tl-title">A turning point</div>
+        <div class="tl-desc">After years of pressure to inform on his fellow prisoners, Stockdale refused to give them up — at great personal cost. Around the same time, his wife Sybil was advocating publicly for the prisoners on the world stage. Soon after, the systematic mistreatment in the camp eased.</div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-year">1973</div>
+        <div class="tl-title">"I am the master of my fate"</div>
+        <div class="tl-desc">Back in contact with the fold, fellow prisoner Dave Hatcher passes him an improvised note bearing the final verse of <em>Invictus.</em></div>
+      </div>
+    </div>
+  </section>
+
+  <section id="dichotomy">
+    <div class="kicker">The Core Framework</div>
+    <h2>⚖️ The Dichotomy of Control</h2>
+    <p class="lede"><span class="gloss" title="Dichotomy of control: the Stoic practice of sorting everything into two buckets — what you can control and what you can't — and investing your energy only in the first.">The dichotomy of control</span> is simple: "Ready at hand" as he ejected was Epictetus's central rule — keep two separate files in your mind. Everything you suffer over coveting belongs to the second.</p>
+    <div class="dichotomy">
+      <div class="dcol up">
+        <h3>Up to You</h3>
+        <div class="tag">Within your will &amp; power — your total concern</div>
+        <ul>
+          <li>Your opinions and judgments</li>
+          <li>Your aims and aversions</li>
+          <li>Your own grief and joy</li>
+          <li>Your attitude about what happens</li>
+          <li>Your own good and your own evil</li>
+        </ul>
+      </div>
+      <div class="dcol not">
+        <h3>Not Up to You</h3>
+        <div class="tag">External — coveting it dooms you to fear &amp; anxiety</div>
+        <ul>
+          <li>Your station in life</li>
+          <li>Your body, health, and life itself</li>
+          <li>Property and wealth</li>
+          <li>Pleasure and pain</li>
+          <li>Reputation — "others decide what it is"</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section id="teaching">
+    <div class="kicker">Big Ideas</div>
+    <h2>💡 What the Philosophy Taught</h2>
+    <p class="lede">The doctrines Stockdale tested against the hardest conditions imaginable — captivity, isolation, and shame.</p>
+    <div class="cards">
+      <div class="card">
+        <span class="icon">⚖️</span>
+        <h3>Shame, not pain, brings a person down</h3>
+        <p>The linchpin of Stoic thought. Physical injuries, Stockdale said, were "peanuts" next to the agony of feeling you had betrayed yourself and the people counting on you.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🔥</span>
+        <h3>Emotions are acts of will</h3>
+        <p>Fear doesn't come out of the shadows and envelop you — you are wholly responsible for starting, stopping, and controlling it. His chant: "control fear, control guilt."</p>
+      </div>
+      <div class="card">
+        <span class="icon">🎭</span>
+        <h3>Act well the given part</h3>
+        <p>"You are an actor in a drama... if it be his pleasure that you enact a cripple or a ruler, act it well." The role is assigned; only the performance is yours.</p>
+      </div>
+      <div class="card">
+        <span class="icon">🚫</span>
+        <h3>There is no such thing as a victim of another</h3>
+        <p>You can only be a victim of yourself. Laying your actions off on third parties or forces is a failure to level with yourself.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="backus">
+    <div class="kicker">The Order</div>
+    <h2>🎖️ BACK US</h2>
+    <p class="lede">Stockdale's first rules for the prisoners — easy-to-remember acronyms built to hold up under real pressure, unlike "name, rank, serial number." He rejected purely self-protective directives that had "no chance of standing up" under interrogation, and instead told them: "we here under the gun are the experts, we are the masters of our fate... throw out the book and write your own."</p>
+    <div class="backus">
+      <label class="flip"><input type="checkbox" hidden><div class="flip-inner">
+        <div class="flip-face flip-front"><div class="letter">B</div><div class="word">Bow<small>Don't, in public</small></div><span class="flip-hint">tap to flip ↻</span></div>
+        <div class="flip-face flip-back"><div class="bk-domain">Leadership</div><div class="bk-text">Protect the public, irreversible commitment. A recorded "bow" outlives the relief it buys.</div></div>
+      </div></label>
+      <label class="flip"><input type="checkbox" hidden><div class="flip-inner">
+        <div class="flip-face flip-front"><div class="letter">A</div><div class="word">Air<small>Stay off it</small></div><span class="flip-hint">tap to flip ↻</span></div>
+        <div class="flip-face flip-back"><div class="bk-domain">Strategy</div><div class="bk-text">Don't lend your voice to a rival's narrative. If forced onto the channel, change what travels through it.</div></div>
+      </div></label>
+      <label class="flip"><input type="checkbox" hidden><div class="flip-inner">
+        <div class="flip-face flip-front"><div class="letter">C</div><div class="word">Crimes<small>Admit none</small></div><span class="flip-hint">tap to flip ↻</span></div>
+        <div class="flip-face flip-back"><div class="bk-domain">Decisions</div><div class="bk-text">Reject the false premise. Accepting the framing is the real concession; the decision just follows.</div></div>
+      </div></label>
+      <label class="flip"><input type="checkbox" hidden><div class="flip-inner">
+        <div class="flip-face flip-front"><div class="letter">K</div><div class="word">Kiss<small>Never, goodbye</small></div><span class="flip-hint">tap to flip ↻</span></div>
+        <div class="flip-face flip-back"><div class="bk-domain">Team dynamics</div><div class="bk-text">Don't buy relief by abandoning the team. The selectively-offered reward divides a group fastest.</div></div>
+      </div></label>
+    </div>
+    <p style="font-size:13px;color:var(--text-secondary);margin-bottom:18px;">Tap any card to flip between its prison meaning and its modern business application.</p>
+    <div class="us-note"><strong>US = Unity over Self.</strong> "Loners make out in an enemy's prison." Each prisoner worked at the lowest common denominator — never negotiating for themselves, only for all. In May 1967 Stockdale forbade anyone to accept early release; the order was met with "spontaneous jubilation."</div>
+
+    <h3 class="subhead">Decoding the Command, Letter by Letter</h3>
+    <p class="subhead-lede">BACK US was not a slogan — it was a set of bright-line behaviors. Stockdale understood that people under extreme pressure could not be asked to resist <em>everything</em>; the genius was in choosing a small number of refusals everyone could rally around and hold the line on. Each letter named a specific, public act of compliance the captors wanted — and forbade it.</p>
+
+    <div class="cmd">
+      <div class="cmd-badge">B</div>
+      <div class="cmd-body">
+        <h4><span>Don't Bow</span> in public</h4>
+        <p>The captors' protocol forced every inmate to demonstrate shame — bowing to all guards, heads low, never looking at the sky. A public bow was a propaganda image: visible proof of a broken, repentant prisoner.</p>
+        <p>By forbidding the public bow, Stockdale denied the captors the one thing their propaganda machine needed — the <em>appearance</em> of submission. Private concessions extracted under pressure could be survived and recovered from; a photographed bow could not be taken back.</p>
+        <p class="ex">"[Camp] protocol called for making all their inmates demonstrate shame — bowing to all guards, heads low, never looking at the sky."</p>
+      </div>
+    </div>
+
+    <div class="cmd">
+      <div class="cmd-badge">A</div>
+      <div class="cmd-body">
+        <h4>Stay off the <span>Air</span></h4>
+        <p>The "new regime" superimposed on the prison was, in Stockdale's words, "a propaganda factory" — staffed by English-speaking officers "with quotas to fill": press interviews with visiting left-wing Americans and propaganda films starring intimidated prisoners.</p>
+        <p>Staying off the air meant refusing to be a usable voice or face for that factory. When prisoners were forced onto it anyway, they sabotaged the product — salting their words with double meanings, funny-obscene gestures, and jokes (one named the supposed "traitors" as Clark Kent and Ben Casey). The propaganda began to backfire.</p>
+        <p class="ex">"Smart American college men were salting their acts with sentences with double meanings... practical jokes. The propaganda footage and interviews started to backfire."</p>
+      </div>
+    </div>
+
+    <div class="cmd">
+      <div class="cmd-badge">C</div>
+      <div class="cmd-body">
+        <h4>Admit no <span>Crimes</span></h4>
+        <p>The entire prison philosophy revolved around "repentance" for "crimes" of antisocial behavior — the prison functioned, in Stockdale's description, as "part psychiatric clinic and part reform school." The whole interrogation process aimed at one payoff: a confession of guilt, an apology, an atonement.</p>
+        <p>Admitting no crimes refused the premise itself. These were soldiers, not criminals; to confess was to accept the captor's entire moral framework. This is the operational twin of the speech's deepest theme — <em>the thing that brings a person down is not pain but shame</em> — and the confession was the instrument of that shame.</p>
+        <p class="ex">"The currency at the game table... was shame, and I learned that unless he could impose shame on me, or unless I imposed it on myself, he had nothing going for him."</p>
+      </div>
+    </div>
+
+    <div class="cmd">
+      <div class="cmd-badge">K</div>
+      <div class="cmd-body">
+        <h4>Never <span>Kiss</span> them goodbye</h4>
+        <p>This governed the exit. The captors ran an "amnesty program" dangling early release to those who were compliant — a deliberate effort to break morale by making prisoners compete to go home first. In May 1967 the loudspeaker promised that those who "truly repent" could leave before the war was over.</p>
+        <p>"Never kiss them goodbye" forbade buying your freedom with cooperation. Accepting early release meant validating the program, abandoning comrades, and leaving on the enemy's terms. Stockdale's order against it was accepted with "spontaneous jubilation" — and it sent his leadership team into harsh isolation as retaliation.</p>
+        <p class="ex">"It is better to die of hunger, exempt from fear and guilt, than to live in affluence with perturbation." — Epictetus, on why never to beg or deal.</p>
+      </div>
+    </div>
+
+    <h3 class="subhead">US — The Principle That Held It Together</h3>
+    <p class="subhead-lede">The "US" was the load-bearing wall. Officially it could read as "United States," but Stockdale meant <strong>Unity over Self</strong> — and three operating principles flowed from it.</p>
+    <div class="principle">
+      <div class="p"><h4>Negotiate only for all</h4><p>"Each of us had to work at the lowest common denominator, never negotiating for himself but only for all." No private deals — because a private deal is a wedge the captor drives between a person and their community.</p></div>
+      <div class="p"><h4>Give no openings for deals</h4><p>"Fear and guilt" were "the real long-term destroyers of will." The defense was to "get rid of all your instincts to compromise, to meet people halfway" — to become "a slow movin', cagey prisoner."</p></div>
+      <div class="p"><h4>Resist only on the leader's list</h4><p>The prisoners asked, in effect: tell us which lines are worth the cost. Defining the few non-negotiables let everyone comply on small things without shame, while resisting together on what truly mattered.</p></div>
+      <div class="p"><h4>A society, not a mob</h4><p>Via the wall-tap code they built "a society with our own laws, traditions, customs, even heroes." Shared rules converted scattered, isolated individuals into an organization the captors could not govern.</p></div>
+    </div>
+  </section>
+
+  <section class="reflect" id="reflection">
+    <div class="kicker">Reflection</div>
+    <h2>🏢 BACK US in the Modern Organization</h2>
+    <p class="lede">Stockdale spent his post-war years teaching leadership, and the framework translates with surprising precision. Strip away the prison and BACK US is a model for <em>operating with integrity under sustained pressure</em> — the everyday condition of leadership, strategy, and culture.</p>
+
+    <div class="reflect-intro">A necessary caveat first: nothing in ordinary working life compares to what Stockdale and his fellow prisoners endured, and the parallels below are about <em>principles</em>, not equivalence. With that said, the framework translates cleanly to a far gentler question. Replace his captors with whatever <em>chronic pressure</em> bears on your organization — a market downturn, an activist competitor, a demanding board, a quarter that won't cooperate — and BACK US stops being about survival and starts being about character: not "how do we win today?" but "what will we refuse to trade away, no matter what the pressure?"</div>
+
+    <div class="diagram-wrap">
+      <div class="diagram-title">How each command maps to the modern organization</div>
+      <pre class="mermaid">
+flowchart TB
+  P["Chronic pressure — downturn, rival, board"]:::pressure
+  P --> B["B — Don't Bow"]:::cmd
+  P --> A["A — Stay off the Air"]:::cmd
+  P --> C["C — Admit no Crimes"]:::cmd
+  P --> K["K — Never Kiss goodbye"]:::cmd
+  B --> BD["Leadership should protect public commitments"]:::dom
+  A --> AD["Strategy avoids a rival's narrative"]:::dom
+  C --> CD["Decisions can reject the false premise"]:::dom
+  K --> KD["Team dynamic over individual needs"]:::dom
+  BD --> US["US — Unity over Self, a shared code not heroics"]:::us
+  AD --> US
+  CD --> US
+  KD --> US
+  US --> R(["Integrity holds under sustained pressure"]):::result
+  classDef pressure fill:#8a2f2f,stroke:#8a2f2f,color:#fff;
+  classDef cmd fill:transparent,stroke:#9A6A1F,color:#9A6A1F,stroke-width:2px;
+  classDef dom fill:#F3EBDB,stroke:#9A6A1F,color:#3a2c12;
+  classDef us fill:#9A6A1F,stroke:#9A6A1F,color:#fff;
+  classDef result fill:transparent,stroke:#1f7a3f,color:#1f7a3f,stroke-width:2px;
+      </pre>
+    </div>
+
+    <h3>Don't Bow — Protect What's Public and Irreversible<span class="map">Leadership &amp; reputation</span></h3>
+    <p><span class="lead-in">The principle:</span> Some concessions can be walked back; a public act cannot. Stockdale protected the visible image because propaganda — not private pain — was the enemy's real prize.</p>
+    <p>In business, the equivalent is the irreversible public commitment made under pressure: the misleading earnings narrative, the values statement quietly abandoned when it gets expensive, the customer promise broken to make a number. Leaders are watched the way prisoners were photographed. Teams calibrate their own integrity to what the leader will publicly stand behind when it costs something. The discipline is to decide in advance which public commitments are load-bearing — and to take the short-term pain rather than "bow" on them, because the recorded bow outlives the relief it buys.</p>
+
+    <h3>Stay off the Air — Control the Channels That Define You<span class="map">Strategy &amp; communication</span></h3>
+    <p><span class="lead-in">The principle:</span> Don't lend your voice or face to a narrative that serves your adversary's goals. When forced onto the channel, refuse to make the product they want.</p>
+    <p>Strategically, this is about not being conscripted into someone else's story — a competitor's framing, a price war that commoditizes your category, an outrage cycle that sets your agenda for you. The prisoners who were forced "on the air" and salted their performance with jokes are a study in <em>judo</em>: when you cannot avoid the channel, change what travels through it. Modern teams do the same when they reframe a competitor's attack on their own terms rather than reacting to it, or decline to compete on the one axis (usually price) where a rival is strongest. The strategic question is always: whose game am I playing, and does showing up here advance my mission or theirs?</p>
+
+    <h3>Admit no Crimes — Refuse a False Premise<span class="map">Strategy &amp; decision-making</span></h3>
+    <p><span class="lead-in">The principle:</span> The confession mattered because it made the prisoner accept the captor's entire moral framework. Reject the premise and the pressure loses its grip.</p>
+    <p>Organizations are constantly handed false premises: "everyone in the industry cuts this corner," "growth at any cost is the only option," "we have to match this feature or we're dead." Accepting the framing is the real concession — the specific decision merely follows. Stockdale's insight that shame, not pain, is what breaks a person maps directly onto culture: what corrodes a company is not a hard quarter but the slow internalization of a story in which compromise is normal and inevitable. Strong cultures keep separate "files," exactly as Epictetus prescribed — distinguishing the external pressures they cannot control (the market, the cycle) from the judgments and standards that are entirely theirs to keep.</p>
+
+    <h3>Never Kiss Them Goodbye — Don't Buy Relief by Abandoning the Team<span class="map">Team dynamics &amp; incentives</span></h3>
+    <p><span class="lead-in">The principle:</span> The amnesty program weaponized self-interest, making prisoners compete to escape by complying. Refusing it kept the group whole.</p>
+    <p>This is the sharpest lesson for team dynamics, because adversarial pressure rarely arrives as brute force — it arrives as a <em>selectively offered reward</em>. Stack-ranking that pits colleagues against each other, retention bonuses for the few while the team is cut, the "early release" of a leader who jumps to safety as the project sinks: each is an amnesty program. It divides a group far more effectively than any external threat. "Negotiate only for all" is a direct prescription against the side deal — the manager who quietly protects their own headcount, the executive who takes the win and lets the team absorb the loss. The integrity of a team is tested precisely when the system offers individuals a private exit.</p>
+
+    <h3>Unity over Self — Replace Heroics with a Shared Code<span class="map">Organizational culture</span></h3>
+    <p><span class="lead-in">The principle:</span> Stockdale insisted he was "not a lone man on a white horse." His achievement was a <em>system</em> — a tap code, a clear set of refusals, a society with its own laws — that let isolated individuals act as one.</p>
+    <p>The deepest organizational lesson is that resilience is engineered, not summoned. The famous "Stockdale Paradox" — confront the brutal facts of your reality, yet never lose faith you will prevail — is the strategic posture here: BACK US worked because it was unsentimental about how bad things were while staying absolutely committed to the outcome. Three culture-building moves stand out for modern leaders: <strong>define the few non-negotiables explicitly</strong> so people aren't left guessing which principles the team will hold the line on; <strong>let people compromise on the small things without shame</strong>, reserving firm resistance for what's truly load-bearing, which prevents burnout and protects people's sense of integrity; and <strong>build the communication backbone</strong> — Stockdale's prisoners had a wall-tap code — so the culture survives even when the organization is fragmented, remote, or under strain. A shared code that everyone knows will outperform individual heroics every time, because heroics don't scale and aren't there in the hardest, most isolated moments.</p>
+
+    <div class="reflect-intro" style="margin-top:30px;">In the end BACK US is a framework for <strong>pre-deciding your integrity</strong>. Its power is that the hard choices are made <em>before</em> the pressure arrives, codified simply enough to remember under stress, and held collectively rather than left to individual willpower. That is exactly what distinguishes organizations that keep their character through a crisis from those that discover, too late, that they traded it away one reasonable-seeming concession at a time.</div>
+  </section>
+
+  <section id="people">
+    <div class="kicker">The Cast</div>
+    <h2>👥 People in the Story</h2>
+    <div class="people">
+      <div class="person">
+        <div class="name">Epictetus (c. AD 50–135)</div>
+        <div class="role">The Stoic teacher</div>
+        <p>Born into slavery and later freed in Rome, he became a renowned philosopher whose <em>Enchiridion</em> Stockdale carried into combat and prison. Individual freedom is one of the most frequent themes across his surviving teachings.</p>
+      </div>
+      <div class="person">
+        <div class="name">Philip Rhinelander</div>
+        <div class="role">The dean who opened his eyes</div>
+        <p>Stanford's Dean of Humanities and Sciences. His private tutorials and parting gift of <em>The Enchiridion</em> launched Stockdale's philosophic life.</p>
+      </div>
+      <div class="person">
+        <div class="name">Aleksandr Solzhenitsyn</div>
+        <div class="role">The witness who confirmed it</div>
+        <p>From the <em>Gulag</em>: "the line separating good and evil passes... right through every human heart." Stockdale says he understood this long before he read it.</p>
+      </div>
+      <div class="person">
+        <div class="name">Dave Hatcher &amp; Sybil Stockdale</div>
+        <div class="role">The fellow prisoner &amp; the wife</div>
+        <p>Hatcher smuggled the <em>Invictus</em> verse to Stockdale via a note hidden under a sink. Sybil's public advocacy in Paris helped bring an end to the prisoners' mistreatment — though he learned this only years later.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="quotes">
+    <div class="kicker">In His Words</div>
+    <h2>💬 Lines That Carried Him</h2>
+    <div class="quotes">
+      <blockquote>"Men, the lecture-room of the philosopher is a hospital; students ought not to walk out of it in pleasure, but in pain."<cite>— Epictetus, on the stark realism of Stoicism</cite></blockquote>
+      <blockquote>"Lameness is an impediment to the leg, but not to the Will... You will find such things to be an impediment to something else, but not truly to yourself."<cite>— Epictetus, a line Stockdale held onto after his injuries on capture</cite></blockquote>
+      <blockquote>"The judgment seat and a prison is each a place, the one high, the other low; but the attitude of your will can be kept the same, if you want to keep it the same, in either place."<cite>— Epictetus</cite></blockquote>
+      <blockquote>"Work with what you have control of and you'll have your hands full."<cite>— Stockdale's distillation of the Stoic creed</cite></blockquote>
+    </div>
+  </section>
+
+  <section class="invictus" id="invictus">
+    <div class="kicker">The Closing</div>
+    <h2>⛓️ Invictus</h2>
+    <p class="poem">It matters not how strait the gate,<br>How charged with punishment the scroll,<br><strong>I am the master of my fate:</strong><br><strong>I am the captain of my soul.</strong></p>
+    <p class="poem-note">The final verse of Ernest Henley's poem, written on a scrap of paper toweling and passed to Stockdale — the note he unfolded back in his cell after years of isolation, and the line on which his speech ends.</p>
+  </section>
+
+</div>
+
+<footer>
+  Summary of <strong>"Courage Under Fire"</strong> by James Bond Stockdale (Hoover Institution, Stanford University, 1993).<br>
+  Leadership Edition · Adapted for general distribution · Quotations drawn from the source text.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.1/dist/mermaid.min.js"></script>
+<script>
+  (function(){
+    var root = document.documentElement;
+    var btn = document.getElementById('themeToggle');
+
+    // Preserve the raw diagram source so we can re-render on theme change.
+    var mmEl = document.querySelector('.mermaid');
+    var mmSource = mmEl ? mmEl.textContent : null;
+    var mmReady = (typeof mermaid !== 'undefined');
+
+    function renderMermaid(theme){
+      if (!mmEl || !mmReady) return;
+      try {
+        mermaid.initialize({
+          startOnLoad:false, securityLevel:'loose', theme:'base',
+          themeVariables:{ fontFamily:"system-ui, sans-serif", fontSize:'17px' },
+          flowchart:{ curve:'basis', useMaxWidth:true, htmlLabels:true, nodeSpacing:55, rankSpacing:70, padding:14 }
+        });
+        mmEl.removeAttribute('data-processed');
+        mmEl.innerHTML = mmSource;
+        var id = 'mm-' + Date.now();
+        mermaid.render(id, mmSource).then(function(res){ mmEl.innerHTML = res.svg; });
+      } catch(e) { /* leave source text as graceful fallback */ }
+    }
+
+    function apply(theme){
+      root.setAttribute('data-theme', theme);
+      btn.textContent = theme === 'dark' ? '☀' : '◐';
+      renderMermaid(theme);
+    }
+
+    var saved = localStorage.getItem('cuf-theme');
+    var initial = saved ? saved : (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+    apply(initial);
+
+    btn.addEventListener('click', function(){
+      var next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+      apply(next); localStorage.setItem('cuf-theme', next);
+    });
+  })();
+
+  /* ===== Dynamic UI behaviors ===== */
+  (function(){
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var nav = document.getElementById('nav');
+    var bar = document.getElementById('progress-bar');
+    var toTop = document.getElementById('to-top');
+    var avatar = document.querySelector('.avatar-float');
+    var links = Array.prototype.slice.call(document.querySelectorAll('.nav-links a'));
+    var sections = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); });
+
+    // Reading progress + nav visibility + back-to-top (all on scroll, throttled via rAF)
+    var ticking = false;
+    function onScroll(){
+      if (ticking) return;
+      ticking = true;
+      requestAnimationFrame(function(){
+        var st = window.pageYOffset || document.documentElement.scrollTop;
+        var h = document.documentElement.scrollHeight - window.innerHeight;
+        bar.style.width = (h > 0 ? (st / h) * 100 : 0) + '%';
+        if (st > 420) { nav.classList.add('visible'); } else { nav.classList.remove('visible'); }
+        if (st > 600) { toTop.classList.add('show'); } else { toTop.classList.remove('show'); }
+        if (avatar) { if (st > 300) { avatar.classList.add('hidden'); } else { avatar.classList.remove('hidden'); } }
+        ticking = false;
+      });
+    }
+    window.addEventListener('scroll', onScroll, { passive:true });
+    onScroll();
+
+    // Smooth-scroll for nav links and in-page anchor links (respects reduced motion)
+    var smoothLinks = Array.prototype.slice.call(document.querySelectorAll('.nav-links a, a.jump'));
+    smoothLinks.forEach(function(a){
+      a.addEventListener('click', function(e){
+        var target = document.getElementById(a.getAttribute('href').slice(1));
+        if (!target) return;
+        e.preventDefault();
+        target.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block:'start' });
+      });
+    });
+    toTop.addEventListener('click', function(){
+      window.scrollTo({ top:0, behavior: reduce ? 'auto' : 'smooth' });
+    });
+
+    // Scrollspy — highlight the nav link of the section in view
+    if ('IntersectionObserver' in window){
+      var spy = new IntersectionObserver(function(entries){
+        entries.forEach(function(en){
+          if (en.isIntersecting){
+            var id = en.target.id;
+            links.forEach(function(a){
+              a.classList.toggle('active', a.getAttribute('href') === '#' + id);
+            });
+          }
+        });
+      }, { rootMargin:'-45% 0px -50% 0px', threshold:0 });
+      sections.forEach(function(s){ if (s) spy.observe(s); });
+    }
+
+    // Scroll-triggered reveal animations
+    // Auto-tag logical blocks so markup stays clean.
+    var revealSelectors = [
+      'section > .kicker', 'section > h2', 'section > .lede',
+      '.one-idea', '.distinct',
+      '.stat', '.tl-item', '.dcol', '.card', '.cmd', '.principle .p',
+      '.flip', '.us-note', '.diagram-wrap', '.reflect-intro',
+      '.reflect h3', '.reflect > p', '.person', 'blockquote',
+      '.subhead', '.subhead-lede', '.invictus .poem', '.invictus .poem-note'
+    ];
+    document.querySelectorAll(revealSelectors.join(',')).forEach(function(el){
+      el.classList.add('reveal');
+    });
+
+    var revealEls = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)){
+      revealEls.forEach(function(el){ el.classList.add('in'); });
+    } else {
+      var revObs = new IntersectionObserver(function(entries, obs){
+        entries.forEach(function(en){
+          if (en.isIntersecting){ en.target.classList.add('in'); obs.unobserve(en.target); }
+        });
+      }, { rootMargin:'0px 0px -8% 0px', threshold:0.08 });
+      revealEls.forEach(function(el){ revObs.observe(el); });
+    }
+
+    // Animated stat counters
+    function animateCount(el){
+      var target = parseFloat(el.getAttribute('data-count'));
+      var suffix = el.getAttribute('data-suffix') || '';
+      var decimals = (el.getAttribute('data-count').indexOf('.') > -1) ? 1 : 0;
+      if (reduce){ el.textContent = el.getAttribute('data-display'); return; }
+      var dur = 1100, start = null;
+      function step(ts){
+        if (!start) start = ts;
+        var p = Math.min((ts - start) / dur, 1);
+        var eased = 1 - Math.pow(1 - p, 3); // ease-out cubic
+        var val = (target * eased).toFixed(decimals);
+        el.textContent = val + suffix;
+        if (p < 1){ requestAnimationFrame(step); }
+        else { el.textContent = el.getAttribute('data-display'); }
+      }
+      requestAnimationFrame(step);
+    }
+    var counters = document.querySelectorAll('.num[data-count]');
+    if ('IntersectionObserver' in window){
+      var cObs = new IntersectionObserver(function(entries, obs){
+        entries.forEach(function(en){
+          if (en.isIntersecting){ animateCount(en.target); obs.unobserve(en.target); }
+        });
+      }, { threshold:0.5 });
+      counters.forEach(function(c){ cObs.observe(c); });
+    } else {
+      counters.forEach(function(c){ c.textContent = c.getAttribute('data-display'); });
+    }
+  })();
+</script>
+</body>
+</html>
